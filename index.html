@@ -9,18 +9,7 @@
     :root {
       /* =========================================================================
          🎨 配色方案切换区
-         提示：将不需要的方案用注释包裹，保留一套方案即可。
          ========================================================================= */
-
-      /* 👉 方案 1：原版科技蓝 (默认) - 经典深蓝，高亮青色 */
-      /*
-      --bg-dark: #0f1525;
-      --panel-bg: rgba(22, 28, 45, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --accent: #00d2ff;
-      --text-main: #e0e0e0;
-      --text-muted: #8890a0;
-      */
 
       /* 👉 方案 2：黑曜石金 (高端黑金) - 纯黑背景，奢华金色 */
       
@@ -30,27 +19,6 @@
       --accent: #ffd700;
       --text-main: #f5f5f5;
       --text-muted: #999999;
-      
-
-      /* 👉 方案 3：赛博紫罗兰 (霓虹风格) - 深紫背景，玫红高亮 */
-      /*
-      --bg-dark: #0f0b1a;
-      --panel-bg: rgba(30, 20, 50, 0.5);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --accent: #d946ef;
-      --text-main: #fae8ff;
-      --text-muted: #a78bfa;
-      */
-
-      /* 👉 方案 4：黑客帝国绿 (极客风格) - 深墨绿背景，终端绿高亮 */
-      /*
-      --bg-dark: #02120a;
-      --panel-bg: rgba(10, 30, 20, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --accent: #00ff9d;
-      --text-main: #e0fff4;
-      --text-muted: #5eead4;
-      */
 
       --radius: 12px;
     }
@@ -224,30 +192,70 @@
     .result-group { margin-bottom: 24px; animation: fadeIn 0.5s ease; border-bottom: 1px solid var(--glass-border); padding-bottom: 20px; }
     .result-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
     .grid-imgs { display: flex; flex-wrap: wrap; gap: 12px; }
-    .img-card {
-      height: 160px; 
-      border-radius: 8px; overflow: hidden; border: 1px solid var(--glass-border);
-      position: relative; background: #000; transition: 0.2s;
-    }
-    .img-card:hover { transform: translateY(-3px); border-color: var(--text-muted); }
-    .img-card img { height: 100%; width: 100%; object-fit: contain; display: block; }
-    .img-actions {
-      position: absolute; inset: 0; background: rgba(0,0,0,0.6);
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      opacity: 0; transition: 0.2s;
-    }
-    .img-card:hover .img-actions { opacity: 1; }
-    .action-btn {
-      width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.2);
-      border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    }
-    .action-btn:hover { background: var(--accent); color: #000; }
 
-    /* Lightbox - 修正了显示比例问题 */
+    /* =======================================================
+       🔥 新的图片卡片样式：左图右按钮
+       ======================================================= */
+    .img-card {
+      width: 100%;
+      height: 160px; /* 固定高度 */
+      border-radius: 8px; 
+      overflow: hidden; 
+      border: 1px solid var(--glass-border);
+      background: #000; 
+      transition: 0.2s;
+      display: flex; /* Flex布局：左图右按钮 */
+      flex-direction: row;
+    }
+    .img-card:hover { border-color: var(--text-muted); box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+    
+    /* 左侧图片区域 */
+    .img-card-view {
+      flex: 1;
+      position: relative;
+      cursor: zoom-in; /* 提示点击可放大 */
+      overflow: hidden;
+      background-color: #0d0d0d;
+    }
+    .img-card-view img { 
+      width: 100%; height: 100%; 
+      object-fit: contain; 
+      display: block; 
+      transition: transform 0.3s;
+    }
+    .img-card-view:hover img { transform: scale(1.02); }
+
+    /* 右侧固定下载栏 */
+    .img-sidebar {
+      width: 44px;
+      background: rgba(255,255,255,0.08);
+      border-left: 1px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .side-btn {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: 0.2s;
+    }
+    .side-btn:hover { background: var(--accent); color: #000; }
+
+
+    /* Lightbox */
     .lightbox { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.95); display: none; flex-direction: column; }
     .lightbox.show { display: flex; }
     .lb-header { padding: 15px 20px; display: flex; justify-content: space-between; color: #aaa; }
-    /* 修改：确保图片能完整显示，不裁剪，支持各种比例 */
     .lb-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; width: 100%; height: 100%; }
     .lb-content img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
     .lb-footer { padding: 20px; display: flex; justify-content: center; gap: 20px; }
@@ -353,7 +361,7 @@
 <div class="lightbox" id="lightbox">
   <div class="lb-header">
     <span id="lbInfo">预览</span>
-    <span style="cursor:pointer" onclick="closeLightbox()">✕ 关闭</span>
+    <span style="cursor:pointer" onclick="closeLightbox()">✕ 关闭 (ESC)</span>
   </div>
   <div class="lb-content" onclick="closeLightbox()">
     <img id="lbImg" src="" onclick="event.stopPropagation()">
@@ -366,9 +374,7 @@
 <script>
 ;(() => {
   // ========================================================
-  // 🟢 风格配置区 (维护这里)
-  // preview: 网站上展示的预览图 (1张)
-  // refs:    幕后发送给 AI 的参考图片组 (多张，建议放在子文件夹)
+  // 🟢 风格配置区
   // ========================================================
   const PPT_STYLES = [
     {
@@ -429,7 +435,7 @@
         './styles/red_blue_project/ref5.png',
         './styles/red_blue_project/ref6.png'
       ],
-      suffix: '---以上是用户输入的生成PPT的提示词。以下是你要遵循的系统提示词：你是一位专精于生成企业级高密度数据可视化PPT幻灯片截图的AI专家。你的输出必须是一张可以直接插入专业商务演示文稿的静态单页图片，核心强调“信息量巨大”和“高密度数据展示”。【核心风格要求】：整体基调为专业、严谨、商务的企业级信息图表设计。主导配色严格遵循参考图的“科技蓝+深红/橙红”体系，背景整洁白底。布局采用高度结构化、模块化的网格形式，信息排布极其紧凑。大量使用带有微妙立体感或投影的圆角矩形容器、连接线、指示箭头、现代扁平化商务图标。关键数据和指标数字必须特大号加粗显示，配合醒目的颜色，以视觉化凸显极高的信息密度。【视觉形式多样性】：根据用户输入的内容逻辑，灵活运用以下高阶图表形式进行高密度展示：(a) 3D立体台阶或波浪形丝带路径（用于包含大量节点的流程演进）；(b) 中心辐射型、圆形闭环或漏斗汇聚至靶心的布局（用于复杂的协同、总结与目标聚焦）；(c) 几何分割对比图（如上下红蓝通栏横幅、六边形对撞区域，用于密集对比）；(d) 金字塔分层结构（用于多层级密集管理）；(e) 底部或侧边带有多组数据卡片的复合型仪表板。【内容处理绝对规则】：默认使用简体中文。无论何种场景，必须完全、严格地使用用户提供的数据、数值和专业名词。绝对禁止自己编造任何数据、虚构数值或填充无意义文本。即使用户提供的信息量看似较少，也必须通过增大关键数字字号、优化模块留白或采用中心聚焦排版来适配，严禁无中生有地增加信息。'
+      suffix: '---以上是用户输入的生成PPT的提示词。以下是你要遵循的系统提示词：你是一位专精于生成企业级高密度数据可视化PPT幻灯片截图的AI专家。你的输出必须是一张可以直接插入专业商务演示文稿的静态单页图片，核心强调“信息量巨大”和“高密度数据展示”。【核心风格要求】：整体基调为专业、严谨、商务的企业级信息图表设计。主导配色严格遵循参考图的“科技蓝+深红/橙红”体系，背景整洁白底。布局采用高度结构化、模块化的网格形式，信息排布极其紧凑。大量使用带有微妙立体感或投影的圆角矩形容器、连接线、指示箭头和现代扁平化商务图标。关键数据和指标数字必须特大号加粗显示，配合醒目的颜色，以视觉化凸显极高的信息密度。【视觉形式多样性】：根据用户输入的内容逻辑，灵活运用以下高阶图表形式进行高密度展示：(a) 3D立体台阶或波浪形丝带路径（用于包含大量节点的流程演进）；(b) 中心辐射型、圆形闭环或漏斗汇聚至靶心的布局（用于复杂的协同、总结与目标聚焦）；(c) 几何分割对比图（如上下红蓝通栏横幅、六边形对撞区域，用于密集对比）；(d) 金字塔分层结构（用于多层级密集管理）；(e) 底部或侧边带有多组数据卡片的复合型仪表板。【内容处理绝对规则】：默认使用简体中文。无论何种场景，必须完全、严格地使用用户提供的数据、数值和专业名词。绝对禁止自己编造任何数据、虚构数值或填充无意义文本。即使用户提供的信息量看似较少，也必须通过增大关键数字字号、优化模块留白或采用中心聚焦排版来适配，严禁无中生有地增加信息。'
     },
     {
       id: 'red_grey_project',
@@ -794,10 +800,11 @@
         <div class="grid-imgs">
           ${urls.map(url => `
             <div class="img-card">
-              <img src="${url}" loading="lazy" onclick="viewLarge('${url}', true)">
-              <div class="img-actions">
-                <button class="action-btn" onclick="viewLarge('${url}', true)" title="预览">👁</button>
-                <button class="action-btn" onclick="download('${url}')" title="下载">↓</button>
+              <div class="img-card-view" onclick="viewLarge('${url}', true)">
+                <img src="${url}" loading="lazy">
+              </div>
+              <div class="img-sidebar">
+                <button class="side-btn" onclick="download('${url}')" title="下载">↓</button>
               </div>
             </div>
           `).join('')}
@@ -815,6 +822,12 @@
     ui.lbDownBtn.style.display = showDownload ? 'block' : 'none';
   };
   window.closeLightbox = () => ui.lb.classList.remove('show');
+  
+  // ESC 键关闭 Lightbox
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
   window.downloadCurrent = () => { if(lbUrl) download(lbUrl); };
   window.download = async (url) => {
     try {

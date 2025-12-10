@@ -1336,9 +1336,10 @@
         } else {
           ui.historyList.innerHTML = pageItems.map(item => {
             const time = new Date(item.createdAt).toLocaleString();
-            // 区分状态：completed, pending, timeout(可刷新), failed(真正失败，不可刷新)
+            // 区分状态：completed, pending, timeout(可刷新), failed(真正失败), rejected(审核未通过)
             const isCompleted = item.status === 'completed' && item.imageUrls && item.imageUrls.length > 0;
             const isRealFailed = item.status === 'failed';  // 真正的API失败
+            const isRejected = item.status === 'rejected';  // 成功但无图片（审核）
             const isTimeout = item.status === 'timeout';     // 本地轮询超时
             const isPending = item.status === 'pending';
 
@@ -1349,6 +1350,9 @@
             } else if (isRealFailed) {
               statusClass = 'failed';
               statusText = '已失败';
+            } else if (isRejected) {
+              statusClass = 'pending';  // 用pending样式，因为可以刷新
+              statusText = '无图片(审核)';
             } else if (isTimeout) {
               statusClass = 'pending';
               statusText = '超时(可刷新)';
@@ -1358,10 +1362,14 @@
             }
 
             const hasImages = item.imageUrls && item.imageUrls.length > 0;
-            const canRefresh = !isCompleted && !isRealFailed;  // 只有pending和timeout可刷新
+            // rejected状态也可以刷新（以防是查询问题）
+            const canRefresh = !isCompleted && !isRealFailed;
+            let thumbText = '等待结果...';
+            if (isRealFailed) thumbText = '生成失败';
+            if (isRejected) thumbText = '审核未通过';
             const thumbHtml = hasImages
               ? `<img src="${item.imageUrls[0]}" loading="lazy">`
-              : '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:12px;">' + (isRealFailed ? '生成失败' : '等待结果...') + '</div>';
+              : '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:12px;">' + thumbText + '</div>';
 
             return `
               <div class="history-item" data-task-id="${item.taskId}">
@@ -1526,6 +1534,13 @@
                 urls = [fixR2Url(data.data.url)];
               }
               console.log('任务成功，最终图片URL:', urls);
+
+              // 如果成功但没有图片，通常是因为内容审核
+              if (urls.length === 0) {
+                addHistoryItem(taskId, 'rejected', []);
+                return { success: true, urls: [], rejected: true };
+              }
+
               addHistoryItem(taskId, 'completed', urls);
               return { success: true, urls };
             }

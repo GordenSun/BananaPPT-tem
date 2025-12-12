@@ -910,7 +910,7 @@
         <div style="flex:1"></div>
         <div class="status-bar" id="status"></div>
         <div class="key-section">
-          <div class="key-label">API Key (联系作者微信 <b>duge360</b> 购买，每次最低0.3元，价格可能变动)</div>
+          <div class="key-label">API Key (联系作者微信 <b>duge360</b> 购买，每次0.3元，价格可能变动)</div>
           <div class="key-input-row">
             <input type="text" id="userKey" placeholder="sk-..." style="height:34px;">
             <button class="btn-sm" id="saveKey">保存</button>
@@ -1442,9 +1442,11 @@
         try {
           // 使用静默模式，不更新主界面状态栏
           const result = await pollTaskStatus(taskId, key, 1, true);
-          renderHistoryList();
         } catch (e) {
           console.error('刷新失败:', e);
+        } finally {
+          // 无论成功还是失败，都刷新历史列表以显示最新状态
+          renderHistoryList();
         }
       };
 
